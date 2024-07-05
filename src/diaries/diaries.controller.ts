@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Patch, Body, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Patch, Body, ParseIntPipe, ValidationPipe, Query } from '@nestjs/common';
 import { CreateDiaryEntryDto } from './dto/create-entry.dto';
 import { UpdateDiaryEntryDto } from './dto/update-entry.dto';
 import { DiariesService } from './diaries.service';
@@ -13,8 +13,8 @@ export class DiariesController {
     }
 
     @Get('my')
-    getMyDiary() {
-        return this.diariesService.getMyDiary();
+    getMyDiary(@Query('publicOnly') publicOnly: boolean) {
+        return this.diariesService.getMyDiary(publicOnly);
     }
 
     @Get(':id')
@@ -23,12 +23,12 @@ export class DiariesController {
     }
 
     @Post('my')
-    createDiaryEntry(@Body() createDiaryEntry: CreateDiaryEntryDto){
+    createDiaryEntry(@Body(ValidationPipe) createDiaryEntry: CreateDiaryEntryDto){
         return this.diariesService.createDiaryEntry(createDiaryEntry);
     }
 
     @Patch('my/:id')
-    updateDiaryEntry(@Param('id', ParseIntPipe) id: number, @Body() updateDiaryEntry: UpdateDiaryEntryDto){
+    updateDiaryEntry(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updateDiaryEntry: UpdateDiaryEntryDto){
         return this.diariesService.updateDiaryEntry(id, updateDiaryEntry);
     }
 
