@@ -1,84 +1,70 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDiaryEntryDto } from './dto/create-entry.dto';
-import { UpdateDiaryEntryDto } from './dto/update-entry.dto';
+import { CreateDiaryDto } from './dto/create-diary.dto';
+import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { NotFoundException } from '@nestjs/common';
 
 
 @Injectable()
 export class DiariesService {
     private myId = 1
-    private diaries = [
+    private entries = [
         {
             id: 1,
+            diaryId: 1,
             title: "First Entry",
             content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            userId: 1,
-            isPublic: true
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         },
         {
             id: 2,
+            diaryId: 1,
             title: "Second Entry",
             content: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            userId: 1,
-            isPublic: false
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         },
         {
             id: 3,
+            diaryId: 2,
             title: "Third Entry",
             content: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            userId: 3,
-            isPublic: true
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         },
         {
             id: 4,
+            diaryId: 3,
             title: "Fourth Entry",
             content: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-            userId: 2,
-            isPublic: true
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         },
         {
             id: 5,
+            diaryId: 3,
             title: "Fifth Entry",
-            content: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            userId: 2,
-            isPublic: false
+            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         },
         {
             id: 6,
+            diaryId: 4,
             title: "Sixth Entry",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            userId: 3,
-            isPublic: true
+            content: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         },
         {
             id: 7,
+            diaryId: 4,
             title: "Seventh Entry",
             content: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            userId: 1,
-            isPublic: true
-        },
-        {
-            id: 8,
-            title: "Eighth Entry",
-            content: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-            userId: 2,
-            isPublic: false
-        },
-        {
-            id: 9,
-            title: "Ninth Entry",
-            content: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            userId: 3,
-            isPublic: true
-        },
-        {
-            id: 10,
-            title: "Tenth Entry",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            userId: 1,
-            isPublic: true
+            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
         }
-    ];
+    ]
+
+    private diaries = [
+        { id: 1, userId: 1, title: "Diary 1", isPublic: true },
+        { id: 2, userId: 1, title: "Diary 2", isPublic: false },
+        { id: 3, userId: 2, title: "Diary 3", isPublic: true },
+        { id: 4, userId: 2, title: "Diary 4", isPublic: true }
+    ]
 
     getDiaries() {
         return this.diaries.filter((diary) => diary.isPublic);
@@ -92,7 +78,7 @@ export class DiariesService {
             }, []);
         }
         return this.diaries.reduce((acc: typeof this.diaries, diary) => {
-            diary.userId == this.myId && acc.push(diary);
+            if (diary.userId == this.myId) acc.push(diary);
             return acc;
         }, []);
     }
@@ -103,22 +89,23 @@ export class DiariesService {
         return diary
     }
 
-    createDiaryEntry(diaryEntry: CreateDiaryEntryDto) {
+    createDiary(diaryEntry: CreateDiaryDto) {
         let newId = this.diaries.length + 1;
         this.diaries.push({id:newId, userId: this.myId, ...diaryEntry});
         return {id:newId, ...diaryEntry};
     }
 
-    updateDiaryEntry(id: number, diaryEntry: UpdateDiaryEntryDto) {
+    updateDiary(id: number, updateBody: UpdateDiaryDto) {
         let diary = this.getDiary(id);
         if (!diary) throw new NotFoundException(`Diary with ID ${id} not found`);
-        this.diaries = this.diaries.map((diary) => diary.id == id ? {...diary, ...diaryEntry} : diary);
-        return {...diary, ...diaryEntry};
+        this.diaries = this.diaries.map((diary) => diary.id == id ? {...diary, ...updateBody} : diary);
+        return {...diary, ...updateBody};
     }
 
-    deleteDiaryEntry(id: number) {
+    deleteDiary(id: number) {
         let diary = this.getDiary(id);
         if (!diary) throw new NotFoundException(`Diary with ID ${id} not found`);
+        this.entries = this.entries.filter((entry) => entry.diaryId != id);
         this.diaries = this.diaries.filter((diary) => diary.id != id);
         return diary;
     }

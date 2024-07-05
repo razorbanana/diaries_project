@@ -1,13 +1,9 @@
 import { IsString, IsBoolean, IsNotEmpty } from 'class-validator';
 
-export class CreateDiaryEntryDto {
+export class CreateDiaryDto {
     @IsString()
     @IsNotEmpty()
     title: string;
-
-    @IsString()
-    @IsNotEmpty()
-    content: string;
 
     @IsBoolean()
     isPublic: boolean;

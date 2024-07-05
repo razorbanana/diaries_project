@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Patch, Body, ParseIntPipe, ValidationPipe, Query } from '@nestjs/common';
-import { CreateDiaryEntryDto } from './dto/create-entry.dto';
-import { UpdateDiaryEntryDto } from './dto/update-entry.dto';
+import { CreateDiaryDto } from './dto/create-diary.dto';
+import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiariesService } from './diaries.service';
 
 @Controller('diaries')
@@ -23,17 +23,17 @@ export class DiariesController {
     }
 
     @Post('my')
-    createDiaryEntry(@Body(ValidationPipe) createDiaryEntry: CreateDiaryEntryDto){
-        return this.diariesService.createDiaryEntry(createDiaryEntry);
+    createDiary(@Body(ValidationPipe) createDiary: CreateDiaryDto){
+        return this.diariesService.createDiary(createDiary);
     }
 
     @Patch('my/:id')
-    updateDiaryEntry(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updateDiaryEntry: UpdateDiaryEntryDto){
-        return this.diariesService.updateDiaryEntry(id, updateDiaryEntry);
+    updateDiary(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updateDiary: UpdateDiaryDto){
+        return this.diariesService.updateDiary(id, updateDiary);
     }
 
     @Delete('my/:id')
-    deleteDiaryEntry(@Param('id', ParseIntPipe) id: number){
-        return this.diariesService.deleteDiaryEntry(id);
+    deleteDiary(@Param('id', ParseIntPipe) id: number){
+        return this.diariesService.deleteDiary(id);
     }
 }
