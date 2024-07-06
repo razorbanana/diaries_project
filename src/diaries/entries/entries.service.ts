@@ -88,4 +88,11 @@ export class EntriesService {
         this.entries = this.entries.filter(entry => entry.id !== id);
         return entry;
     }
+
+    deleteDiaryEntries(diaryId: number){    
+        let entries = this.getEntries(diaryId);
+        if (!entries.length) throw new NotFoundException(`diary with ID ${diaryId} not found`);
+        this.entries = this.entries.filter(entry => entry.diaryId !== diaryId);
+        return entries;
+    }
 }

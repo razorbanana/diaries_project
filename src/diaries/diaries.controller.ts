@@ -3,7 +3,7 @@ import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiariesService } from './diaries.service';
 
-@Controller('diaries')
+@Controller()
 export class DiariesController {
     constructor(private readonly diariesService: DiariesService){}
 
@@ -18,22 +18,22 @@ export class DiariesController {
     }
 
     @Get(':id')
-    getDiary(@Param('id', ParseIntPipe) id: number){
+    getDiary(@Param('id') id: number){
         return this.diariesService.getDiary(id);
     }
 
     @Post('my')
-    createDiary(@Body(ValidationPipe) createDiary: CreateDiaryDto){
+    createDiary(@Body() createDiary: CreateDiaryDto){
         return this.diariesService.createDiary(createDiary);
     }
 
     @Patch('my/:id')
-    updateDiary(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updateDiary: UpdateDiaryDto){
+    updateDiary(@Param('id') id: number, @Body() updateDiary: UpdateDiaryDto){
         return this.diariesService.updateDiary(id, updateDiary);
     }
 
     @Delete('my/:id')
-    deleteDiary(@Param('id', ParseIntPipe) id: number){
+    deleteDiary(@Param('id') id: number){
         return this.diariesService.deleteDiary(id);
     }
 }
