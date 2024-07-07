@@ -30,7 +30,7 @@ export class DiariesController {
     }
 
     @Patch('my/:id')
-    updateDiary(@Param('id') id: number, @Body() updateDiary: Prisma.DiaryUpdateInput){
+    updateDiary(@Param('id') id: number, @Body() updateDiary: UpdateDiaryDto){
         return this.diariesService.updateDiary(id, updateDiary);
     }
 

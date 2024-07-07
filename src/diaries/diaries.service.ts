@@ -37,7 +37,7 @@ export class DiariesService {
         return this.databaseModule.diary.create({data:createData});
     }
 
-    async updateDiary(id: number, updateBody: Prisma.DiaryUpdateInput) {
+    async updateDiary(id: number, updateBody: UpdateDiaryDto) {
         return this.databaseModule.diary.update({where: {id}, data: updateBody});
     }
 
