@@ -2,6 +2,8 @@ import { Controller, Get, Post, Put, Delete, Param, Patch, Body, ParseIntPipe, V
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiariesService } from './diaries.service';
+import { Prisma } from '@prisma/client';
+
 
 @Controller()
 export class DiariesController {
@@ -13,8 +15,8 @@ export class DiariesController {
     }
 
     @Get('my')
-    getMyDiary(@Query('publicOnly') publicOnly: boolean) {
-        return this.diariesService.getMyDiary(publicOnly);
+    getMyDiary(@Query('isPrivate') isPrivate: boolean) {
+        return this.diariesService.getMyDiary(isPrivate);
     }
 
     @Get(':id')
@@ -28,7 +30,7 @@ export class DiariesController {
     }
 
     @Patch('my/:id')
-    updateDiary(@Param('id') id: number, @Body() updateDiary: UpdateDiaryDto){
+    updateDiary(@Param('id') id: number, @Body() updateDiary: Prisma.DiaryUpdateInput){
         return this.diariesService.updateDiary(id, updateDiary);
     }
 
