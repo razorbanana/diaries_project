@@ -4,6 +4,7 @@ import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiariesService } from './diaries.service';
 import { Prisma } from '@prisma/client';
 import { EntriesService } from 'src/entries/entries.service';
+import { ApiBody } from '@nestjs/swagger';
 
 
 @Controller()
@@ -29,11 +30,13 @@ export class DiariesController {
     }
 
     @Post('my')
+    @ApiBody({ type: [CreateDiaryDto] })
     createDiary(@Body() createDiary: CreateDiaryDto){
         return this.diariesService.createDiary(createDiary);
     }
 
     @Patch('my/:id')
+    @ApiBody({ type: [UpdateDiaryDto] })
     updateDiary(@Param('id') id: number, @Body() updateDiary: UpdateDiaryDto){
         return this.diariesService.updateDiary(id, updateDiary);
     }

@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DiariesService } from 'src/diaries/diaries.service';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller()
 export class UsersController {
@@ -23,11 +24,13 @@ export class UsersController {
     }
 
     @Post('register')
+    @ApiBody({ type: [CreateUserDto] })
     createUser(@Body() data: CreateUserDto){
         return this.usersService.createUser(data);
     }
 
     @Patch(":id")
+    @ApiBody({ type: [UpdateUserDto] })
     updateUser(@Param('id') id: number, @Body() data: UpdateUserDto){
         return this.usersService.updateUser(id, data);
     }

@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Valida
 import { EntriesService } from './entries.service';
 import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller()
 export class EntriesController {
@@ -18,11 +19,13 @@ export class EntriesController {
     }
 
     @Post(':diaryId')
+    @ApiBody({ type: [CreateEntryDto] })
     createEntry(@Param('diaryId') diaryId: number, @Body() createEntry: CreateEntryDto){
         return this.entriesService.createEntry(createEntry, diaryId);
     }
 
     @Patch('single/:id')
+    @ApiBody({ type: [UpdateEntryDto] })
     updateEntry(@Param('id') id: number, @Body() updateEntry: UpdateEntryDto){
         return this.entriesService.updateEntry(id, updateEntry);
     }
