@@ -1,98 +1,44 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
+import {DatabaseService} from '../database/database.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EntriesService {
-    private entries = [
-        {
-            id: 1,
-            diaryId: 1,
-            title: "First Entry",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        },
-        {
-            id: 2,
-            diaryId: 1,
-            title: "Second Entry",
-            content: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        },
-        {
-            id: 3,
-            diaryId: 2,
-            title: "Third Entry",
-            content: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        },
-        {
-            id: 4,
-            diaryId: 3,
-            title: "Fourth Entry",
-            content: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        },
-        {
-            id: 5,
-            diaryId: 3,
-            title: "Fifth Entry",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        },
-        {
-            id: 6,
-            diaryId: 4,
-            title: "Sixth Entry",
-            content: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        },
-        {
-            id: 7,
-            diaryId: 4,
-            title: "Seventh Entry",
-            content: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            dateCreated: new Date(2022, 9, Math.floor(Math.random() * 30) + 1)
-        }
-    ]
+    constructor(private databaseService: DatabaseService){}
 
-    getEntries(id: number){
-        return this.entries.filter(entry => entry.diaryId === id);
+    async getEntries(id: number){
+        return this.databaseService.entry.findMany({
+            where: {diaryId: id}
+        })
     }
 
-    getSingleEntry(id: number){
-        return this.entries.find(entry => entry.id === id);
+    async getSingleEntry(id: number){
+        return this.databaseService.entry.findUnique({
+            where: {id}
+        })
     }
 
-    createEntry(createBody: CreateEntryDto, diaryId: number){
+    async createEntry(createBody: CreateEntryDto, diaryId: number){
         const newEntry = {
-            id: this.entries.length + 1,
             diaryId,
-            ...createBody,
-            dateCreated: new Date()
+            ...createBody
         }
-        this.entries.push(newEntry);
-        return newEntry;
+        return this.databaseService.entry.create({
+            data: newEntry
+        })
     }
 
-    updateEntry(id: number, updateBody: UpdateEntryDto){
-        let entry = this.getSingleEntry(id);
-        if (!entry) throw new NotFoundException(`entry with ID ${id} not found`);
-        this.entries = this.entries.map((entry) => entry.id == id ? {...entry, ...updateBody} : entry);
-        return {...entry, ...updateBody};
+    async updateEntry(id: number, updateBody: UpdateEntryDto){
+        return this.databaseService.entry.update({where: {id}, data: updateBody});
     }
 
-    deleteEntry(id: number){
-        let entry = this.getSingleEntry(id);
-        if (!entry) throw new NotFoundException(`entry with ID ${id} not found`);
-        this.entries = this.entries.filter(entry => entry.id !== id);
-        return entry;
+    async deleteEntry(id: number){
+        return this.databaseService.entry.delete({where: {id}});
     }
 
-    deleteDiaryEntries(diaryId: number){    
-        let entries = this.getEntries(diaryId);
-        if (!entries.length) throw new NotFoundException(`diary with ID ${diaryId} not found`);
-        this.entries = this.entries.filter(entry => entry.diaryId !== diaryId);
-        return entries;
+    async deleteDiaryEntries(diaryId: number){    
+        return this.databaseService.entry.deleteMany({where: {diaryId}});;
     }
 }

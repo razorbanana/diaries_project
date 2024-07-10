@@ -17,9 +17,9 @@ export class EntriesController {
         return this.entriesService.getEntries(id);
     }
 
-    @Post(':id')
-    createEntry(@Param('id') id: number, @Body() createEntry: CreateEntryDto){
-        return this.entriesService.createEntry(createEntry, id);
+    @Post(':diaryId')
+    createEntry(@Param('diaryId') diaryId: number, @Body() createEntry: CreateEntryDto){
+        return this.entriesService.createEntry(createEntry, diaryId);
     }
 
     @Patch('single/:id')

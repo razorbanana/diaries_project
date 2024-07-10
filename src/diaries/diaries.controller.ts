@@ -3,11 +3,15 @@ import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiariesService } from './diaries.service';
 import { Prisma } from '@prisma/client';
+import { EntriesService } from 'src/entries/entries.service';
 
 
 @Controller()
 export class DiariesController {
-    constructor(private readonly diariesService: DiariesService){}
+    constructor(
+        private readonly diariesService: DiariesService,
+        private readonly entriesService: EntriesService 
+    ){}
 
     @Get()  
     getDiaries() {
@@ -35,7 +39,17 @@ export class DiariesController {
     }
 
     @Delete('my/:id')
-    deleteDiary(@Param('id') id: number){
+    async deleteDiary(@Param('id') id: number){
+        await this.entriesService.deleteDiaryEntries(id);
         return this.diariesService.deleteDiary(id);
+    }
+
+    @Delete(':userId')
+    async deleteUsersDiaries(@Param('userId') id: number){
+        const userDiaries = await this.diariesService.getUsersDiaries(id)
+        userDiaries.forEach(diary => {
+            this.entriesService.deleteDiaryEntries(diary.id)
+        })
+        return this.diariesService.deleteUsersDiaries(id);
     }
 }

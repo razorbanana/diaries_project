@@ -8,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
     constructor(private readonly databaseModule: DatabaseService) {}
 
-    getUsers(){
+    async getUsers(){
         return this.databaseModule.user.findMany(
             {
                 where: {
@@ -18,7 +18,7 @@ export class UsersService {
         );
     }
 
-    getUser(id: number){
+    async getUser(id: number){
         return this.databaseModule.user.findUnique({
             where: {
                 id
@@ -26,13 +26,13 @@ export class UsersService {
         });
     }
 
-    createUser(data: CreateUserDto){
+    async createUser(data: CreateUserDto){
         return this.databaseModule.user.create({
             data
         });
     }
 
-    updateUser(id: number, data: UpdateUserDto){
+    async updateUser(id: number, data: UpdateUserDto){
         return this.databaseModule.user.update({
             where: {
                 id
@@ -41,7 +41,7 @@ export class UsersService {
         });
     }
 
-    deleteUser(id: number){
+    async deleteUser(id: number){
         return this.databaseModule.user.delete({
             where: {
                 id

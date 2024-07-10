@@ -7,15 +7,15 @@ import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class DiariesService {
-    constructor(private readonly databaseModule: DatabaseService) {}
-    private myId = 1
+    constructor(private readonly databaseService: DatabaseService) {}
+    private myId = 8
 
     async getDiaries() {
-        return this.databaseModule.diary.findMany();
+        return this.databaseService.diary.findMany();
     }
 
     async getMyDiary(isPrivate: boolean) {
-        return this.databaseModule.diary.findMany(
+        return this.databaseService.diary.findMany(
             {
                 where: {
                     userId: this.myId,
@@ -25,8 +25,12 @@ export class DiariesService {
         );
     }
 
+    async getUsersDiaries(userId: number) {
+        return this.databaseService.diary.findMany({where: {userId}});
+    }
+
     async getDiary(id: number) {
-        return this.databaseModule.diary.findUnique({where: {id}});
+        return this.databaseService.diary.findUnique({where: {id}});
     }
 
     async createDiary(diaryData: CreateDiaryDto) {
@@ -34,15 +38,19 @@ export class DiariesService {
             ...diaryData,
             userId: this.myId
         }
-        return this.databaseModule.diary.create({data:createData});
+        return this.databaseService.diary.create({data:createData});
     }
 
     async updateDiary(id: number, updateBody: UpdateDiaryDto) {
-        return this.databaseModule.diary.update({where: {id}, data: updateBody});
+        return this.databaseService.diary.update({where: {id}, data: updateBody});
     }
 
     async deleteDiary(id: number) {
-        return this.databaseModule.diary.delete({where: {id}});
+        return this.databaseService.diary.delete({where: {id}});
+    }
+
+    async deleteUsersDiaries(userId: number) {
+        return this.databaseService.diary.deleteMany({where: {userId}});
     }
 
 }

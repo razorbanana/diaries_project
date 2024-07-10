@@ -7,8 +7,9 @@ import { RouteEnum } from '../common/enums/route.enum';
 import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
-    imports: [DatabaseModule],
+    imports: [DatabaseModule, EntriesModule],
     controllers: [DiariesController],
-    providers: [DiariesService]
+    providers: [DiariesService],
+    exports: [DiariesService]
 })
 export class DiariesModule {}

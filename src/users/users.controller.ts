@@ -3,10 +3,14 @@ import { UsersService } from './users.service';
 import { Prisma } from '@prisma/client';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { DiariesService } from 'src/diaries/diaries.service';
 
 @Controller()
 export class UsersController {
-    constructor(private readonly usersService:UsersService) {}
+    constructor(
+        private readonly usersService:UsersService,
+        private readonly diariesService:DiariesService
+    ) {}
 
     @Get()
     getUsers() {
@@ -29,7 +33,8 @@ export class UsersController {
     }
 
     @Delete(":id")
-    deleteUser(@Param('id') id: number){
+    async deleteUser(@Param('id') id: number){
+        await this.diariesService.deleteUsersDiaries(id);
         return this.usersService.deleteUser(id);
     }
 
