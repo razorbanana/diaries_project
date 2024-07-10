@@ -29,6 +29,8 @@ model User {
 model Diary {
   id        Int      @id @default(autoincrement())
   title     String   
+  description String @default("no description")
+  category  String   @default("general")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int
