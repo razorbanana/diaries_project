@@ -6,10 +6,11 @@ import { DatabaseModule } from 'src/database/database.module';
 import { RouteEnum } from 'src/common/enums/route.enum';
 import { RouterModule } from '@nestjs/core';
 import { DiariesModule } from 'src/diaries/diaries.module';
+import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, JwtStrategy],
   imports: [DatabaseModule, DiariesModule],
   exports: [UsersService]
 })

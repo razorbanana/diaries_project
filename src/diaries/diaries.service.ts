@@ -8,17 +8,16 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class DiariesService {
     constructor(private readonly databaseService: DatabaseService) {}
-    private myId = 8
 
     async getDiaries() {
         return this.databaseService.diary.findMany();
     }
 
-    async getMyDiary(isPrivate: boolean) {
+    async getMyDiary(userId: number, isPrivate: boolean) {
         return this.databaseService.diary.findMany(
             {
                 where: {
-                    userId: this.myId,
+                    userId: userId,
                     isPrivate
                 }
             }
@@ -33,10 +32,10 @@ export class DiariesService {
         return this.databaseService.diary.findUnique({where: {id}});
     }
 
-    async createDiary(diaryData: CreateDiaryDto) {
+    async createDiary(userId:number, diaryData: CreateDiaryDto) {
         const createData = {
             ...diaryData,
-            userId: this.myId
+            userId: userId
         }
         return this.databaseService.diary.create({data:createData});
     }

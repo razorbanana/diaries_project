@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Patch, Body, ParseIntPipe, ValidationPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Patch, Body, Query, UseGuards, Req } from '@nestjs/common';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiariesService } from './diaries.service';
-import { Prisma } from '@prisma/client';
+import { Request } from 'express';
 import { EntriesService } from 'src/entries/entries.service';
 import { ApiBody } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
+import { UserWithoutPassword } from 'src/common/types/user.type';
 
 
 @Controller()
@@ -19,9 +21,11 @@ export class DiariesController {
         return this.diariesService.getDiaries();
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('my')
-    getMyDiary(@Query('isPrivate') isPrivate: boolean) {
-        return this.diariesService.getMyDiary(isPrivate);
+    getMyDiary(@Req() req: Request & { user: UserWithoutPassword }, @Query('isPrivate') isPrivate: boolean) { 
+        const userId = req.user.id
+        return this.diariesService.getMyDiary(userId, isPrivate);
     }
 
     @Get(':id')
@@ -29,10 +33,12 @@ export class DiariesController {
         return this.diariesService.getDiary(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('my')
     @ApiBody({ type: [CreateDiaryDto] })
-    createDiary(@Body() createDiary: CreateDiaryDto){
-        return this.diariesService.createDiary(createDiary);
+    createDiary(@Req() req: Request & { user: UserWithoutPassword }, @Body() createDiary: CreateDiaryDto){
+        const userId = req.user.id
+        return this.diariesService.createDiary(userId, createDiary);
     }
 
     @Patch('my/:id')
