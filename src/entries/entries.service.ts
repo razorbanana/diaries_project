@@ -37,8 +37,4 @@ export class EntriesService {
     async deleteEntry(id: number){
         return this.databaseService.entry.delete({where: {id}});
     }
-
-    async deleteDiaryEntries(diaryId: number){    
-        return this.databaseService.entry.deleteMany({where: {diaryId}});;
-    }
 }

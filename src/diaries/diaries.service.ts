@@ -45,11 +45,13 @@ export class DiariesService {
     }
 
     async deleteDiary(id: number) {
+        await this.databaseService.entry.deleteMany({
+            where: {
+                diaryId: id
+            }
+        })
         return this.databaseService.diary.delete({where: {id}});
     }
 
-    async deleteUsersDiaries(userId: number) {
-        return this.databaseService.diary.deleteMany({where: {userId}});
-    }
 
 }

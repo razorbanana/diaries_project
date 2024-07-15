@@ -11,8 +11,7 @@ import { UserWithoutPassword } from 'src/common/types/user.type';
 @Controller()
 export class UsersController {
     constructor(
-        private readonly usersService:UsersService,
-        private readonly diariesService:DiariesService
+        private readonly usersService:UsersService
     ) {}
 
     @Get()
@@ -60,7 +59,6 @@ export class UsersController {
 
     @Delete(":id")
     async deleteUser(@Param('id') id: number){
-        await this.diariesService.deleteUsersDiaries(id);
         return this.usersService.deleteUser(id);
     }
 

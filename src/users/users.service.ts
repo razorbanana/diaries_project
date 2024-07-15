@@ -8,12 +8,12 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UsersService {
     constructor(
-        private readonly databaseModule: DatabaseService,
+        private readonly databaseService: DatabaseService,
         private jwtService: JwtService,
     ) {}
 
     async getUsers(){
-        return this.databaseModule.user.findMany(
+        return this.databaseService.user.findMany(
             {
                 where: {
                     visible: true
@@ -23,7 +23,7 @@ export class UsersService {
     }
 
     async getUser(id: number){
-        return this.databaseModule.user.findUnique({
+        return this.databaseService.user.findUnique({
             where: {
                 id
             }
@@ -31,13 +31,13 @@ export class UsersService {
     }
 
     async createUser(data: CreateUserDto){
-        return this.databaseModule.user.create({
+        return this.databaseService.user.create({
             data
         });
     }
 
     async updateUser(id: number, data: UpdateUserDto){
-        const response = await this.databaseModule.user.update({
+        const response = await this.databaseService.user.update({
             where: {
                 id
             },
@@ -48,7 +48,25 @@ export class UsersService {
     }
 
     async deleteUser(id: number){
-        return this.databaseModule.user.delete({
+        await this.databaseService.diary.findMany({
+            where:{
+                userId: id
+            }
+        }).then(diaries => {
+            diaries.forEach(diary => {
+                this.databaseService.entry.deleteMany({
+                    where: {
+                        diaryId: diary.id
+                    }
+                })
+            })
+        })
+        await this.databaseService.diary.deleteMany({
+            where: {
+                userId: id
+            }
+        })
+        return this.databaseService.user.delete({
             where: {
                 id
             }

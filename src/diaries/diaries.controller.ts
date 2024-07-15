@@ -12,8 +12,7 @@ import { UserWithoutPassword } from 'src/common/types/user.type';
 @Controller()
 export class DiariesController {
     constructor(
-        private readonly diariesService: DiariesService,
-        private readonly entriesService: EntriesService 
+        private readonly diariesService: DiariesService
     ){}
 
     @Get()  
@@ -49,16 +48,8 @@ export class DiariesController {
 
     @Delete('my/:id')
     async deleteDiary(@Param('id') id: number){
-        await this.entriesService.deleteDiaryEntries(id);
+        
         return this.diariesService.deleteDiary(id);
     }
 
-    @Delete(':userId')
-    async deleteUsersDiaries(@Param('userId') id: number){
-        const userDiaries = await this.diariesService.getUsersDiaries(id)
-        userDiaries.forEach(diary => {
-            this.entriesService.deleteDiaryEntries(diary.id)
-        })
-        return this.diariesService.deleteUsersDiaries(id);
-    }
 }

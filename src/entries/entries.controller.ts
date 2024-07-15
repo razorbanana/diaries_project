@@ -34,9 +34,4 @@ export class EntriesController {
     deleteEntry(@Param('id') id: number){
         return this.entriesService.deleteEntry(id);
     }
-
-    @Delete(':id')
-    deleteDiaryEntries(@Param('id') id: number){
-        return this.entriesService.deleteDiaryEntries(id);
-    }
 }
