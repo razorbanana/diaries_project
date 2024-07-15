@@ -9,6 +9,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 import { UserWithoutPassword } from 'src/common/types/user.type';
 
 @Controller()
+@UseGuards(JwtAuthGuard)
 export class UsersController {
     constructor(
         private readonly usersService:UsersService
@@ -19,7 +20,6 @@ export class UsersController {
         return this.usersService.getUsers();
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get('my')
     getMyUser(@Req() req: Request & { user: UserWithoutPassword }){
         const user = req.user
@@ -37,7 +37,6 @@ export class UsersController {
         return this.usersService.createUser(data);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Patch('my')
     updateMyUser(@Req() req: Request & { user: UserWithoutPassword }, @Body() data: UpdateUserDto){
         const userId = req.user.id
@@ -50,7 +49,6 @@ export class UsersController {
         return this.usersService.updateUser(id, data);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Delete('my')
     deleteMyUser(@Req() req: Request & { user: UserWithoutPassword }){
         const userId = req.user.id

@@ -10,6 +10,7 @@ import { UserWithoutPassword } from 'src/common/types/user.type';
 
 
 @Controller()
+@UseGuards(JwtAuthGuard)
 export class DiariesController {
     constructor(
         private readonly diariesService: DiariesService
@@ -20,7 +21,6 @@ export class DiariesController {
     //     return this.diariesService.getDiaries();
     // }
 
-    @UseGuards(JwtAuthGuard)
     @Get('my')
     getMyDiaries(@Req() req: Request & { user: UserWithoutPassword }) { 
         const userId = req.user.id
@@ -32,7 +32,6 @@ export class DiariesController {
         return this.diariesService.getDiary(id);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Post('my')
     @ApiBody({ type: [CreateDiaryDto] })
     createDiary(@Req() req: Request & { user: UserWithoutPassword }, @Body() createDiary: CreateDiaryDto){
