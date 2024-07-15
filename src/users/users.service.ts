@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,7 +12,10 @@ export class UsersService {
         private jwtService: JwtService,
     ) {}
 
+    private readonly logger = new Logger(UsersService.name)
+
     async getUsers(){
+        this.logger.log('Fetching all users')
         return this.databaseService.user.findMany(
             {
                 where: {
@@ -23,6 +26,7 @@ export class UsersService {
     }
 
     async getUser(id: number){
+        this.logger.log('Fetching user')
         return this.databaseService.user.findUnique({
             where: {
                 id
@@ -31,12 +35,14 @@ export class UsersService {
     }
 
     async createUser(data: CreateUserDto){
+        this.logger.log('Creating user')
         return this.databaseService.user.create({
             data
         });
     }
 
     async updateUser(id: number, data: UpdateUserDto){
+        this.logger.log('Updating user')
         const response = await this.databaseService.user.update({
             where: {
                 id
@@ -48,6 +54,7 @@ export class UsersService {
     }
 
     async deleteUser(id: number){
+        this.logger.log('Deleting user')
         await this.databaseService.diary.findMany({
             where:{
                 userId: id
