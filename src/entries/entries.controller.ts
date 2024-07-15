@@ -15,7 +15,7 @@ export class EntriesController {
 
     @Get(':id')
     getEntries(@Param('id') id: number){
-        return this.entriesService.getEntries(id);
+        return this.entriesService.getDiaryEntries(id);
     }
 
     @Post(':diaryId')

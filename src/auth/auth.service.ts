@@ -2,12 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AuthPayloadDto } from './dto/auth.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { JwtService } from '@nestjs/jwt';
+import { UsersRepository } from 'src/users/users.repository';
 require('dotenv').config()
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly databaseService: DatabaseService,
+        private usersRepository: UsersRepository,
         private jwtService: JwtService,
     ) {}
 
@@ -15,17 +16,9 @@ export class AuthService {
 
     async validateUser({username, password}: AuthPayloadDto){
         this.logger.log('Validating user')
-        let findUser = await this.databaseService.user.findUnique({
-            where: {
-                email: username
-            }
-        })
+        let findUser = await this.usersRepository.getUser({ where: { email: username } })
         if(!findUser) {
-            findUser = await this.databaseService.user.findUnique({
-                where: {
-                    name: username
-                }
-            })
+            findUser = await this.usersRepository.getUser({ where: { name: username } })
         }
         if(!findUser) return null
         if (password === findUser.password){

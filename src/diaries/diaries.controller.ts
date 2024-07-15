@@ -15,16 +15,16 @@ export class DiariesController {
         private readonly diariesService: DiariesService
     ){}
 
-    @Get()  
-    getDiaries() {
-        return this.diariesService.getDiaries();
-    }
+    // @Get()  
+    // getDiaries() {
+    //     return this.diariesService.getDiaries();
+    // }
 
     @UseGuards(JwtAuthGuard)
     @Get('my')
-    getMyDiary(@Req() req: Request & { user: UserWithoutPassword }, @Query('isPrivate') isPrivate: boolean) { 
+    getMyDiaries(@Req() req: Request & { user: UserWithoutPassword }) { 
         const userId = req.user.id
-        return this.diariesService.getMyDiary(userId, isPrivate);
+        return this.diariesService.getUserDiaries(userId);
     }
 
     @Get(':id')
