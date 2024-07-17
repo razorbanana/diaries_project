@@ -3,7 +3,7 @@ import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
 @Injectable({ scope: Scope.TRANSIENT })
 export class MyLogger extends ConsoleLogger{
     log(message: any, context?: string) {
-        const modifiedMessage = `uwu ${message}`;
+        const modifiedMessage = `uwu ${JSON.stringify(message, null, 2)}`;
 
         super.log(modifiedMessage, context);
       }
@@ -13,4 +13,5 @@ export class MyLogger extends ConsoleLogger{
 
         super.error(modifiedMessage, stack, context);
       }
+
 }

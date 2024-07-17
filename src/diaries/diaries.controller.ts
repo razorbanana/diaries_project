@@ -7,12 +7,13 @@ import { EntriesService } from 'src/entries/entries.service';
 import { ApiBody } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 import { UserWithoutPassword } from 'src/common/types/user.type';
+import { AccessGuard } from 'src/common/guards/access.guard';
 
 
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class DiariesController {
-    constructor(
+    constructor( 
         private readonly diariesService: DiariesService
     ){}
 
@@ -28,6 +29,7 @@ export class DiariesController {
     }
 
     @Get(':id')
+    @UseGuards(AccessGuard)
     getDiary(@Param('id') id: number){
         return this.diariesService.getDiary(id);
     }
