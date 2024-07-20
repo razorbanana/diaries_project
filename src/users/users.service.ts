@@ -5,15 +5,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from './users.repository';
-import { DiariesRepository } from 'src/diaries/diaries.repository';
-import { EntriesRepository } from 'src/entries/entries.repository';
+
 
 @Injectable()
 export class UsersService {
     constructor(
         private usersRepository: UsersRepository,
-        private diariesRepository: DiariesRepository,
-        private entriesRepository: EntriesRepository,
         private jwtService: JwtService,
     ) {}
 
@@ -43,12 +40,6 @@ export class UsersService {
 
     async deleteUser(id: number){
         this.logger.log('Deleting user')
-        await this.diariesRepository.getDiaries({where:{userId: id}}).then(diaries => {
-            diaries.forEach(diary => {
-                this.entriesRepository.deleteManyEntries({where:{diaryId:diary.id}})
-            })
-        })
-        await this.diariesRepository.deleteManyDiaries({where: {userId: id}})
         return this.usersRepository.deleteUser({where:{id}})
     }
 }

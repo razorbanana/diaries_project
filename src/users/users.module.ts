@@ -7,14 +7,12 @@ import { JwtStrategy } from 'src/common/strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { config } from 'dotenv';
 import { UsersRepository } from './users.repository';
-import { DiariesRepository } from 'src/diaries/diaries.repository';
-import { EntriesRepository } from 'src/entries/entries.repository';
 config();
 
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, JwtStrategy, UsersRepository, DiariesRepository, EntriesRepository],
+  providers: [UsersService, JwtStrategy, UsersRepository],
   imports: [DatabaseModule, DiariesModule, 
     JwtModule.register({
       secret: process.env.JWT_SECRET,

@@ -24,6 +24,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   diaries   Diary[]
+  comments  Comment[]
+  subscriptions Subscription[]
+  relationships Relationship[] @relation("relationships")
+  isRelated Relationship[] @relation("isRelated")
 }
 
 model Diary {
@@ -35,8 +39,9 @@ model Diary {
   updatedAt DateTime @updatedAt
   userId    Int
   isPrivate Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   entries   Entry[]
+  subscriptions Subscription[]
 }
 
 model Entry {
@@ -46,5 +51,44 @@ model Entry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   diaryId   Int
-  diary     Diary    @relation(fields: [diaryId], references: [id])
+  diary     Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+}
+
+model Comment {
+  id       Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  entryId   Int
+  entry     Entry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id       Int      @id @default(autoincrement())
+  userId  Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  diaryId Int 
+  diary Diary @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Status {
+  NEUTRAL
+  SUBSCRIBED
+  BLOCKED
+}
+
+model Relationship {
+  id       Int      @id @default(autoincrement())
+  userId  Int
+  user User @relation("relationships", fields: [userId], references: [id], onDelete: Cascade)
+  status Status @default(NEUTRAL)
+  friendId Int
+  friend User @relation("isRelated", fields: [friendId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

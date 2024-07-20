@@ -17,11 +17,6 @@ export class DiariesController {
         private readonly diariesService: DiariesService
     ){}
 
-    // @Get()  
-    // getDiaries() {
-    //     return this.diariesService.getDiaries();
-    // }
-
     @Get('my')
     getMyDiaries(@Req() req: Request & { user: UserWithoutPassword }) { 
         const userId = req.user.id

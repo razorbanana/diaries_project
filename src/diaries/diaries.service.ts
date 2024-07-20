@@ -9,21 +9,11 @@ import { EntriesRepository } from 'src/entries/entries.repository';
 @Injectable()
 export class DiariesService {
     constructor(
-        private diariesRepository: DiariesRepository,
-        private entriesRepository: EntriesRepository,
+        private diariesRepository: DiariesRepository
     ) {}
 
     private readonly logger = new Logger(DiariesService.name)
 
-    // async getDiaries() {
-    //     this.logger.log('Fetching all diaries')
-    //     return this.databaseService.diary.findMany();
-    // }
-
-    // async getMyDiary(userId: number) {
-    //     this.logger.log('Fetching my diaries')
-    //     return this.diariesRepository.getDiaries(userId)
-    // }
 
     async getUserDiaries(userId: number) {
         this.logger.log('Fetching user`s diaries')
@@ -51,7 +41,6 @@ export class DiariesService {
 
     async deleteDiary(id: number) {
         this.logger.log('Deleting diary')
-        await this.entriesRepository.deleteManyEntries({where:{diaryId: id}})
         return this.diariesRepository.deleteDiary({where: {id}});
     }
 
