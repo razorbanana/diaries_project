@@ -3,5 +3,7 @@ export enum RouteEnum {
     ENTRIES = '/entries',
     USERS = '/users',
     AUTH = '/auth',
-    COMMENTS = '/comments'
+    COMMENTS = '/comments',
+    RELATIONSHIPS = '/relationships',
+    SUBSCRIPTIONS = '/subscriptions'
 }
