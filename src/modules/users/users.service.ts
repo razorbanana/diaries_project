@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../../repositories/users.repository';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 
 @Injectable()
@@ -29,6 +30,17 @@ export class UsersService {
     async createUser(data: CreateUserDto){
         this.logger.log('Creating user')
         return this.usersRepository.createUser({data})
+    }
+
+    async updatePassword(id: number, data: UpdatePasswordDto){
+        this.logger.log('Updating password')
+        const {oldPassword, newPassword} = data
+        const myUser = await this.usersRepository.getUser({where: {id}})
+        if (!myUser) throw new Error('User not found')
+        if (myUser.password !== oldPassword){
+            throw new Error('Old password is incorrect')
+        }
+        return this.usersRepository.updateUser({where: {id}, data: {password: newPassword}})
     }
 
     async updateUser(id: number, data: UpdateUserDto){

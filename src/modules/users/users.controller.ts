@@ -7,6 +7,7 @@ import { DiariesService } from 'src/modules/diaries/diaries.service';
 import { ApiBody } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 import { UserWithoutPassword } from 'src/common/types/user.type';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller()
 @UseGuards(JwtAuthGuard)
@@ -35,6 +36,12 @@ export class UsersController {
     @ApiBody({ type: [CreateUserDto] })
     createUser(@Body() data: CreateUserDto){
         return this.usersService.createUser(data);
+    }
+
+    @Patch('password')
+    updateMyPassword(@Req() req: Request & { user: UserWithoutPassword }, @Body() data: UpdatePasswordDto){
+        const userId = req.user.id
+        return this.usersService.updatePassword(userId, data)
     }
 
     @Patch('my')
