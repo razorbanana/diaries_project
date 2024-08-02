@@ -14,7 +14,7 @@ export class CommentsService {
   async create(userId:number, createCommentDto: CreateCommentDto) {
     this.logger.log('Creating a new comment');
     const newComment = {
-      ...createCommentDto,
+      content: createCommentDto.content,
       user: { connect: { id: userId } },
       entry: { connect: { id: createCommentDto.entryId } }
     }
