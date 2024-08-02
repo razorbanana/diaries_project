@@ -7,7 +7,6 @@ import { UserWithoutPassword } from 'src/common/types/user.type';
 import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 
 @Controller()
-@UseGuards(JwtAuthGuard)
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
@@ -22,9 +21,15 @@ export class CommentsController {
     return this.commentsService.findAll();
   }
 
-  @Get(':id')
+  @Get('single/:id')
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(+id);
+  }
+  
+  @Get(':id')
+  findMany(@Param('id') id: string) {
+    console.log("We are fetching")
+    return this.commentsService.findMany(+id);
   }
 
   @Patch(':id')

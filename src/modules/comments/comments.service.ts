@@ -26,6 +26,11 @@ export class CommentsService {
     return this.commentsRepository.getComments({});
   }
 
+  async findMany(id: number) {
+    this.logger.log('Fetching several comments');
+    return this.commentsRepository.getComments({where: {entryId: id}});
+  }
+
   async findOne(id: number) {
     this.logger.log(`Fetching comment with id`);
     return this.commentsRepository.getComment({where: {id}});

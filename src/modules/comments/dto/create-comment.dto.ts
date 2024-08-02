@@ -7,7 +7,7 @@ export class CreateCommentDto {
     @IsNotEmpty()
     content: string;
     
-    @ApiProperty({description: 'Title of the diary.', type: String, minLength: 1})
+    @ApiProperty({description: 'Id of entry.', type: Number})
     @IsNumber()
     @IsNotEmpty()
     entryId: number;
