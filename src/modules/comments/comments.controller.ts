@@ -11,6 +11,7 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiBody({ type: [CreateCommentDto] })
   create(@Req() req: Request & { user: UserWithoutPassword }, @Body() createCommentDto: CreateCommentDto) {
     return this.commentsService.create(req.user.id, createCommentDto);
